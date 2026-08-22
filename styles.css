@@ -103,6 +103,7 @@
   }
   .mobileMenu .getapp { text-align: center; margin-top: 6px; }
   @media (max-width: 1000px) {
+    nav { position: static; }
     .navLinks, nav .navRow .getapp { display: none; }
     .burger { display: block; }
     .mobileMenu.open { display: flex; }
@@ -155,12 +156,17 @@
   .heroCopy { max-width: 620px; }
   .heroCopy .sub { margin: 20px 0 34px; }
   .heroCopy .heroBtns { justify-content: flex-start; }
+  .mbr { display: none; }
   @media (max-width: 880px) {
     .hero { padding: 112px 0 50px; }
     .heroGrid { grid-template-columns: 1fr; text-align: center; gap: 46px; }
     .heroCopy { max-width: 760px; margin: 0 auto; }
-    .heroCopy .sub { margin: 20px auto 34px; }
-    .heroCopy .heroBtns { justify-content: center; }
+    .heroCopy .kicker { display: none; }
+    .heroCopy h1 { font-size: 31px; letter-spacing: -0.7px; }
+    .mbr { display: inline; }
+    .heroCopy .sub { margin: 20px auto 34px; color: var(--ink); }
+    .heroCopy .heroBtns { justify-content: center; width: 100%; }
+    .heroCopy .heroBtns .getapp { width: 100%; }
   }
   .phoneWrap { display: flex; justify-content: center; }
   .phoneFrame {

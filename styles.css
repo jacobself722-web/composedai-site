@@ -186,7 +186,7 @@
     .heroCopy .heroBtns { justify-content: center; width: 100%; }
     .heroCopy .heroBtns .getapp { width: 100%; }
   }
-  .phoneWrap { display: flex; justify-content: center; }
+  .phoneWrap { display: flex; flex-direction: column; align-items: center; gap: 0; }
   .phoneFrame {
     position: relative;
     width: min(280px, 72vw);
@@ -440,9 +440,14 @@
   .iabNotice button:active { opacity: 0.85; }
 
   /* ---------- Reviews ---------- */
-  .reviewsWall { columns: 3; column-gap: 18px; }
+  .reviewsTrack {
+    display: flex; gap: 18px;
+    overflow-x: auto; padding: 4px 4px 14px;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .reviewsTrack::-webkit-scrollbar { display: none; }
   .reviewCard {
-    break-inside: avoid; margin-bottom: 18px;
+    flex: 0 0 min(340px, 80vw);
     background: var(--card); border: 1px solid var(--line);
     border-radius: 20px; padding: 26px 24px;
     box-shadow: 0 2px 8px rgba(29, 28, 34, 0.04);
@@ -451,7 +456,18 @@
   .stars { color: #F0B84E; font-size: 15px; letter-spacing: 3px; margin-bottom: 6px; }
   .reviewer { color: var(--ink3); font-size: 13.5px; font-weight: 600; margin-bottom: 12px; }
   .reviewCard p { color: var(--ink2); font-size: 15px; line-height: 1.6; }
-  @media (max-width: 820px) { .reviewsWall { columns: 1; } }
+
+  /* ---------- Hero rating badge ---------- */
+  .ratingBadge {
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin-top: 34px; color: var(--ink);
+  }
+  .laurel { width: 32px; height: 74px; }
+  .laurel.flip { transform: scaleX(-1); }
+  .ratingText { text-align: center; }
+  .ratingText span { display: block; font-size: 15px; font-weight: 600; color: var(--ink2); }
+  .ratingText strong { display: block; font-size: 34px; font-weight: 800; line-height: 1.15; }
+  .ratingText .stars { margin-bottom: 0; font-size: 16px; }
 
   /* ---------- Mid CTA band ---------- */
   .band { text-align: center; padding: 30px 0 10px; }

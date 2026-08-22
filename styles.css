@@ -447,7 +447,7 @@
     display: flex; width: max-content;
     animation: marqueeSlide 60s linear infinite;
   }
-  .marquee.alt .marqueeRow { animation-duration: 78s; }
+  .marquee.alt .marqueeRow { margin-left: -189px; }
   .marqueeGroup { display: flex; gap: 18px; padding-right: 18px; align-items: flex-start; }
   @keyframes marqueeSlide { to { transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce) { .marqueeRow { animation: none; } }

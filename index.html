@@ -14,7 +14,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://composedai.app/assets/og.png">
 <link rel="icon" href="assets/icon.png">
-<link rel="stylesheet" href="styles.css?v=26">
+<link rel="stylesheet" href="styles.css?v=27">
 </head>
 <body>
 
@@ -384,7 +384,7 @@ if (inAppBrowser && isIOS) {
   card.innerHTML = '<strong>TikTok can\'t open the App Store directly</strong>' +
     '<span>Copy the link and paste it into Safari to get the app.</span>' +
     '<button type="button" id="iabCopy">Copy link</button>';
-  document.body.appendChild(card);
+  document.body.insertBefore(card, document.body.firstChild);
   document.getElementById("iabCopy").addEventListener("click", () => {
     const done = () => { document.getElementById("iabCopy").textContent = "Copied"; };
     if (navigator.clipboard && navigator.clipboard.writeText) {

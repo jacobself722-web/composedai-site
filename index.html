@@ -298,7 +298,16 @@
 
 <script>
 const APP_STORE_URL = "https://apps.apple.com/us/app/composedai-speaking-coach/id6787477539";
-document.querySelectorAll(".getapp").forEach(a => { if (a.getAttribute("href") === "#") a.href = APP_STORE_URL; });
+// Inside in-app browsers (TikTok, Instagram, Facebook) on iOS, a normal https
+// App Store link can render Apple's web preview inside the webview instead of
+// opening the store. The itms-appss scheme forces the App Store app to open.
+const ua = navigator.userAgent || "";
+const inAppBrowser = /TikTok|musical_ly|Bytedance|Instagram|FBAN|FBAV/i.test(ua);
+const isIOS = /iPhone|iPad|iPod/i.test(ua);
+const storeHref = (inAppBrowser && isIOS)
+  ? APP_STORE_URL.replace("https://", "itms-appss://")
+  : APP_STORE_URL;
+document.querySelectorAll(".getapp").forEach(a => { if (a.getAttribute("href") === "#") a.href = storeHref; });
 
 // Close the mobile menu when a link inside it is tapped.
 document.querySelectorAll(".mobileMenu a").forEach(a =>

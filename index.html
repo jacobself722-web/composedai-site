@@ -14,7 +14,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://composedai.app/assets/og.png">
 <link rel="icon" href="assets/icon.png">
-<link rel="stylesheet" href="styles.css?v=24">
+<link rel="stylesheet" href="styles.css?v=25">
 </head>
 <body>
 
@@ -346,12 +346,35 @@ const APP_STORE_URL = "https://apps.apple.com/us/app/composedai-speaking-coach/i
 // App Store link can render Apple's web preview inside the webview instead of
 // opening the store. The itms-appss scheme forces the App Store app to open.
 const ua = navigator.userAgent || "";
-const inAppBrowser = /TikTok|musical_ly|Bytedance|Instagram|FBAN|FBAV/i.test(ua);
-const isIOS = /iPhone|iPad|iPod/i.test(ua);
+const inAppBrowser = /TikTok|musical_ly|Bytedance|Instagram|FBAN|FBAV/i.test(ua) || location.search.includes("tt=1");
+const isIOS = /iPhone|iPad|iPod/i.test(ua) || location.search.includes("tt=1");
 const storeHref = (inAppBrowser && isIOS)
   ? APP_STORE_URL.replace("https://", "itms-appss://")
   : APP_STORE_URL;
 document.querySelectorAll(".getapp").forEach(a => { if (a.getAttribute("href") === "#") a.href = storeHref; });
+
+// TikTok's in-app browser blocks the App Store. Show a copy-the-link card.
+if (inAppBrowser && isIOS) {
+  const card = document.createElement("div");
+  card.className = "iabNotice";
+  card.innerHTML = '<strong>TikTok can\'t open the App Store directly</strong>' +
+    '<span>Copy the link and paste it into Safari to get the app.</span>' +
+    '<button type="button" id="iabCopy">Copy link</button>';
+  document.body.appendChild(card);
+  document.getElementById("iabCopy").addEventListener("click", () => {
+    const done = () => { document.getElementById("iabCopy").textContent = "Copied"; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(APP_STORE_URL).then(done).catch(() => fallbackCopy(done));
+    } else { fallbackCopy(done); }
+  });
+  function fallbackCopy(done) {
+    const t = document.createElement("textarea");
+    t.value = APP_STORE_URL; t.style.position = "fixed"; t.style.opacity = "0";
+    document.body.appendChild(t); t.select();
+    try { document.execCommand("copy"); done(); } catch (e) {}
+    document.body.removeChild(t);
+  }
+}
 
 // Close the mobile menu when a link inside it is tapped.
 document.querySelectorAll(".mobileMenu a").forEach(a =>

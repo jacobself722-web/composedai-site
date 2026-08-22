@@ -420,6 +420,25 @@
   }
   @media (max-width: 760px) { .whoGrid { grid-template-columns: 1fr; } }
 
+  /* ---------- In-app browser notice ---------- */
+  .iabNotice {
+    position: fixed; top: 14px; left: 16px; right: 16px; z-index: 500;
+    background: #fff; border-radius: 22px;
+    box-shadow: 0 18px 50px rgba(29, 28, 34, 0.25);
+    padding: 20px 20px 18px;
+    display: flex; flex-direction: column; gap: 6px;
+    text-align: left;
+  }
+  .iabNotice strong { font-size: 18px; font-weight: 800; }
+  .iabNotice span { font-size: 15px; color: var(--ink2); line-height: 1.45; }
+  .iabNotice button {
+    margin-top: 10px; width: 100%;
+    background: var(--ink); color: #fff;
+    font-family: var(--font); font-size: 16px; font-weight: 800;
+    padding: 15px 20px; border: none; border-radius: 999px; cursor: pointer;
+  }
+  .iabNotice button:active { opacity: 0.85; }
+
   /* ---------- Reviews ---------- */
   .reviewsWall { columns: 3; column-gap: 18px; }
   .reviewCard {

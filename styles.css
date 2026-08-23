@@ -444,11 +444,17 @@
   .marquee { overflow: hidden; }
   .marquee + .marquee { margin-top: 18px; }
   .marqueeRow {
-    display: flex; width: max-content;
+    display: flex; flex-wrap: nowrap;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    will-change: transform;
     animation: marqueeSlide 60s linear infinite;
   }
-  .marquee.alt .marqueeRow { margin-left: -189px; }
-  .marqueeGroup { display: flex; gap: 18px; padding-right: 18px; align-items: flex-start; }
+  .marqueeGroup {
+    display: flex; flex-wrap: nowrap; gap: 18px; padding-right: 18px;
+    align-items: flex-start;
+  }
   @keyframes marqueeSlide { to { transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce) { .marqueeRow { animation: none; } }
   .reviewCard {

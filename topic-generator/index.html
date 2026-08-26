@@ -321,15 +321,9 @@
     #gearBtn svg { width: 19px; height: 19px; }
   }
 
-  /* ---------- Invert (settings toggle) ---------- */
-  body.inverted { background: #0B0A16; }
-  body.inverted .stage {
-    background: linear-gradient(180deg, #E9EAF4 0%, #F2F3F8 100%);
-  }
+  /* ---------- Invert (settings toggle): mirror the screen for filming ---------- */
   body.inverted .stage,
-  body.inverted .overlay,
-  body.inverted .researchScreen { filter: invert(1) hue-rotate(180deg); }
-  body.inverted img { filter: invert(1) hue-rotate(180deg); }
+  body.inverted .researchScreen { transform: scaleX(-1); }
 
   /* ---------- Settings modal ---------- */
   .overlay {

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ComposedAI</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "Segoe UI", sans-serif;
+    background: #F6F5FC; color: #1F1B33; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px;
+  }
+  .wrap { max-width: 340px; }
+  .logo { font-weight: 800; font-size: 22px; letter-spacing: -0.02em; margin-bottom: 14px; }
+  p { font-size: 15px; line-height: 1.45; color: #4A4560; margin-bottom: 22px; }
+  .btn {
+    display: block; width: 100%; padding: 15px 18px; border-radius: 14px; border: 0;
+    background: #6D5DF0; color: #fff; font-size: 16px; font-weight: 700;
+    text-decoration: none; cursor: pointer; font-family: inherit;
+  }
+  .btn.ghost { background: #EAE7FB; color: #6D5DF0; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap" style="visibility: hidden;">
+  <div class="logo">ComposedAI</div>
+  <p id="msg">Opening the App Store&hellip;</p>
+  <a id="openBtn" class="btn" href="#">Open the App Store</a>
+  <button id="copyBtn" class="btn ghost" type="button" hidden>Copy link for Safari</button>
+</div>
+<script>
+// The page content stays invisible during the instant redirect so this reads
+// as a transition, not a loading screen. If the store hasn't opened after a
+// moment (blocked webview, desktop), the fallback UI appears.
+setTimeout(function () { document.getElementById("wrap").style.visibility = "visible"; }, 1400);
+</script>
+<script>
+// Bio link redirect. CHANNEL is the hidden Apple campaign tag for this slug.
+// /now = Instagram second account, direct to the App Store. Never reuse this slug for a different channel.
+(function () {
+  var CHANNEL = "ig-2-app";
+  var STORE = "https://apps.apple.com/app/apple-store/id6787477539?pt=128849470&ct=" + CHANNEL + "&mt=8";
+
+  // Log the click to PostHog (same project as the app). No person profile,
+  // this is an anonymous counter, not a user.
+  try {
+    var payload = JSON.stringify({
+      api_key: "phc_sB74ogocGsj8RM6PTLwyvPuSzjQgzskSFpoXKejxKJk9",
+      event: "bio_link_click",
+      distinct_id: (function () {
+        try {
+          let id = sessionStorage.getItem("cai_id");
+          if (!id) {
+            id = "bio-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+            sessionStorage.setItem("cai_id", id);
+          }
+          return id;
+        } catch (e) { return "bio-" + Math.random().toString(36).slice(2); }
+      })(),
+      properties: {
+        channel: CHANNEL,
+        path: location.pathname,
+        referrer: document.referrer || "direct",
+        $process_person_profile: false
+      },
+      timestamp: new Date().toISOString()
+    });
+    navigator.sendBeacon("https://us.i.posthog.com/i/v0/e/", new Blob([payload], { type: "application/json" }));
+  } catch (e) {}
+
+  // In-app browsers (TikTok, Instagram, Facebook) on iOS can render Apple's web
+  // preview or block the store; itms-appss forces the App Store app to open.
+  var ua = navigator.userAgent || "";
+  var isTikTok = /TikTok|musical_ly|Bytedance/i.test(ua);
+  var inApp = isTikTok || /Instagram|FBAN|FBAV/i.test(ua);
+  var isIOS = /iPhone|iPad|iPod/i.test(ua);
+  var href = (inApp && isIOS) ? STORE.replace("https://", "itms-appss://") : STORE;
+  document.getElementById("openBtn").href = href;
+
+  // Only TikTok's webview blocks the store; IG opens it fine, no copy fallback.
+  if (isTikTok && isIOS) {
+    var copyBtn = document.getElementById("copyBtn");
+    copyBtn.hidden = false;
+    document.getElementById("msg").textContent = "If the App Store does not open, copy the link and paste it into Safari.";
+    copyBtn.addEventListener("click", function () {
+      var done = function () { copyBtn.textContent = "Copied"; };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(STORE).then(done).catch(function () { fallbackCopy(done); });
+      } else { fallbackCopy(done); }
+    });
+    function fallbackCopy(done) {
+      var t = document.createElement("textarea");
+      t.value = STORE; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select();
+      try { document.execCommand("copy"); done(); } catch (e) {}
+      document.body.removeChild(t);
+    }
+  }
+
+  location.href = href;
+})();
+</script>
+</body>
+</html>
